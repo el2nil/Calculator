@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<VariablesViewState
+   version = "1.0">
+   <ContextStates>
+      <ContextState
+         contextName = "CalculatorBrain.program.getter:CalculatorBrain.swift">
+         <PersistentStrings>
+            <PersistentString
+               value = "self.internalProgram">
+            </PersistentString>
+         </PersistentStrings>
+      </ContextState>
+      <ContextState
+         contextName = "ViewController.(performOperation in _D479D7C443B6E5D6A8B2A48BE681A439)(UIButton) -&gt; ():ViewController.swift">
+         <PersistentStrings>
+            <PersistentString
+               value = "brain">
+            </PersistentString>
+            <PersistentString
+               value = "userIsInTheMiddleOfTyping">
+            </PersistentString>
+            <PersistentString
+               value = " brain.result">
+            </PersistentString>
+         </PersistentStrings>
+      </ContextState>
+      <ContextState
+         contextName = "CalculatorBrain.setOperand(Double) -&gt; ():CalculatorBrain.swift">
+         <PersistentStrings>
+            <PersistentString
+               value = "pending">
+            </PersistentString>
+            <PersistentString
+               value = "isPartialResult">
+            </PersistentString>
+         </PersistentStrings>
+      </ContextState>
+      <ContextState
+         contextName = "ViewController.save() -&gt; ():ViewController.swift">
+         <PersistentStrings>
+            <PersistentString
+               value = "savedProgram">
+            </PersistentString>
+            <PersistentString
+               value = "internalProgram">
+            </PersistentString>
+         </PersistentStrings>
+      </ContextState>
+      <ContextState
+         contextName = "CalculatorBrain.(addToDescription in _CDA2C7058BF57092EA9C80E6A31CE4D6)(String) -&gt; ():CalculatorBrain.swift">
+         <PersistentStrings>
+            <PersistentString
+               value = "descriptionBuffer">
+            </PersistentString>
+         </PersistentStrings>
+      </ContextState>
+      <ContextState
+         contextName = "CalculatorBrain.program.setter:CalculatorBrain.swift">
+         <PersistentStrings>
+            <PersistentString
+               value = "arrayOfObjects">
+            </PersistentString>
+         </PersistentStrings>
+      </ContextState>
+      <ContextState
+         contextName = "ViewController.(touchDigit in _D479D7C443B6E5D6A8B2A48BE681A439)(UIButton) -&gt; ():ViewController.swift">
+         <PersistentStrings>
+            <PersistentString
+               value = "display.text">
+            </PersistentString>
+            <PersistentString
+               value = "userIsTypingDecimalPart">
+            </PersistentString>
+         </PersistentStrings>
+      </ContextState>
+      <ContextState
+         contextName = "CalculatorBrain.performOperation(String) -&gt; ():CalculatorBrain.swift">
+         <PersistentStrings>
+            <PersistentString
+               value = "isPartialResult">
+            </PersistentString>
+            <PersistentString
+               value = "description.isEmpty">
+            </PersistentString>
+         </PersistentStrings>
+      </ContextState>
+   </ContextStates>
+</VariablesViewState>
