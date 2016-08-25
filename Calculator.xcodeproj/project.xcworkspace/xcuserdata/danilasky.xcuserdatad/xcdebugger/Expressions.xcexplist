@@ -14,13 +14,30 @@
          contextName = "ViewController.(performOperation in _D479D7C443B6E5D6A8B2A48BE681A439)(UIButton) -&gt; ():ViewController.swift">
          <PersistentStrings>
             <PersistentString
-               value = "brain">
+               value = " brain.result">
             </PersistentString>
             <PersistentString
                value = "userIsInTheMiddleOfTyping">
             </PersistentString>
             <PersistentString
-               value = " brain.result">
+               value = "brain">
+            </PersistentString>
+            <PersistentString
+               value = "brain.result">
+            </PersistentString>
+         </PersistentStrings>
+      </ContextState>
+      <ContextState
+         contextName = "CalculatorBrain.(executePendingBinaryOperation in _CDA2C7058BF57092EA9C80E6A31CE4D6)() -&gt; ():CalculatorBrain.swift">
+         <PersistentStrings>
+            <PersistentString
+               value = "pending.descriptionOperand">
+            </PersistentString>
+            <PersistentString
+               value = "accumulator">
+            </PersistentString>
+            <PersistentString
+               value = "descriptionAccumulator">
             </PersistentString>
          </PersistentStrings>
       </ContextState>
@@ -74,6 +91,14 @@
          </PersistentStrings>
       </ContextState>
       <ContextState
+         contextName = "ViewController.(actionsDescription in _D479D7C443B6E5D6A8B2A48BE681A439).setter:ViewController.swift">
+         <PersistentStrings>
+            <PersistentString
+               value = "displayValue">
+            </PersistentString>
+         </PersistentStrings>
+      </ContextState>
+      <ContextState
          contextName = "CalculatorBrain.performOperation(String) -&gt; ():CalculatorBrain.swift">
          <PersistentStrings>
             <PersistentString
@@ -81,6 +106,17 @@
             </PersistentString>
             <PersistentString
                value = "description.isEmpty">
+            </PersistentString>
+         </PersistentStrings>
+      </ContextState>
+      <ContextState
+         contextName = "ViewController.(displayValue in _D479D7C443B6E5D6A8B2A48BE681A439).setter:ViewController.swift">
+         <PersistentStrings>
+            <PersistentString
+               value = "brain.description">
+            </PersistentString>
+            <PersistentString
+               value = "brain.error">
             </PersistentString>
          </PersistentStrings>
       </ContextState>

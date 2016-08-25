@@ -32,12 +32,23 @@ class CalculatorBrain {
 	// MARK: Properties
 	
 	private var accumulator = 0.0
+	private var descriptionAccumulator = ""
+	private var currentPrecedence = Int.max
 	
 	private var internalProgram = [AnyObject]()
 	
 	private let parenthesisOperations = ["+", "−"]
-
-	var description: String = ""
+	
+	var description: String {
+		get {
+			if pending == nil {
+				return descriptionAccumulator
+			} else {
+				return pending!.descriptionFunction(pending!.descriptionOperand, pending!.descriptionOperand != descriptionAccumulator ? descriptionAccumulator : "")
+			}
+		}
+	}
+	var error: String?
 	
 	var isPartialResult: Bool {
 		get {
@@ -45,56 +56,56 @@ class CalculatorBrain {
 		}
 	}
 	
-	var variableValues = [String: Double]() {
+	private var variableValues = [String: Double]() {
 		didSet {
 			program = internalProgram
 		}
 	}
 	
 	func setOperand(variableName: String) {
-		
+		operations[variableName] = Operation.Variable
+		performOperation(variableName)
 	}
-
+	
+	func setVariable(variableName: String, value: Double) {
+		operations[variableName] = Operation.Variable
+		variableValues[variableName] = value
+	}
+	
 	func setOperand(operand: Double) {
 		accumulator = operand
 		internalProgram.append(operand)
-		
-		// description
-		if !isPartialResult {
-			description = ""
-		} else if isPartialResult && pending!.secondOperandDescripted {
-			pending = nil
-			description = ""
-		}
+		descriptionAccumulator = String(format: "%g", accumulator)
 	}
 	
 	private var operations: Dictionary<String, Operation> = [
-		"rand" : Operation.NullaryOperation(drand48),
-		"x²" : Operation.UnaryOperation({ $0 * $0 }),
-		"x⁻¹" : Operation.UnaryOperation({ 1 / $0 }),
-		"sin⁻¹" : Operation.UnaryOperation({ 1 / sin($0) }),
-		"cos⁻¹" : Operation.UnaryOperation({ 1 / cos($0) }),
-		"tan" : Operation.UnaryOperation(tan),
-		"ln" : Operation.UnaryOperation(log),
-		"sin" : Operation.UnaryOperation(sin),
-		"cos" : Operation.UnaryOperation(cos),
-		"π" : Operation.Constant(M_PI),
-		"e" : Operation.Constant(M_E),
-		"√" : Operation.UnaryOperation(sqrt),
-		"±" : Operation.UnaryOperation({ -$0 }),
-		"×"	: Operation.BinaryOperation({ $0 * $1 }),
-		"÷"	: Operation.BinaryOperation({ $0 / $1 }),
-		"+"	: Operation.BinaryOperation({ $0 + $1 }),
-		"−"	: Operation.BinaryOperation({ $0 - $1 }),
-		"=" : Operation.Equals
+		"x²"	: Operation.UnaryOperation({ $0 * $0 }, { "(\($0))²" }, nil),
+		"x⁻¹"	: Operation.UnaryOperation({ 1 / $0 }, { "(\($0))¹" }, { $0 == 0.0 ? "Деление на ноль" : nil }),
+		"sin⁻¹" : Operation.UnaryOperation({ 1 / sin($0) }, { "sin(\($0))⁻¹" }, { sin($0) == 0.0 ? "Деление на ноль" : nil  }),
+		"cos⁻¹" : Operation.UnaryOperation({ 1 / cos($0) }, { "cos(\($0))⁻¹" }, { cos($0) == 0.0 ? "Деление на ноль" : nil }),
+		"tan"	: Operation.UnaryOperation(tan, { "tan(\($0))" }, nil),
+		"ln"	: Operation.UnaryOperation(log, { "ln(\($0))" }, { $0 < 0.0 ? "ln отриц. числа" : nil }),
+		"sin"	: Operation.UnaryOperation(sin, { "sin(\($0))" }, nil),
+		"cos"	: Operation.UnaryOperation(cos, { "cos(\($0))" }, nil),
+		"√"		: Operation.UnaryOperation(sqrt, { "√(\($0))" }, { $0 < 0.0 ? "Корень отриц. числа" : nil }),
+		"±"		: Operation.UnaryOperation({ -$0 }, { "-(\($0))" }, nil),
+		"×"		: Operation.BinaryOperation({ $0 * $1 }, { "\($0) × \($1)" }, 1, nil),
+		"÷"		: Operation.BinaryOperation({ $0 / $1 }, { "\($0) ÷ \($1)" }, 1, { $1 == 0.0 ? "Деление на ноль" : nil }),
+		"+"		: Operation.BinaryOperation({ $0 + $1 }, { "\($0) + \($1)" }, 0, nil),
+		"−"		: Operation.BinaryOperation({ $0 - $1 }, { "\($0) − \($1)" }, 0, nil),
+		"rand"	: Operation.NullaryOperation(drand48, "rand()"),
+		"π"		: Operation.Constant(M_PI),
+		"e"		: Operation.Constant(M_E),
+		"="		: Operation.Equals
 	]
 	
 	private enum Operation {
 		case Constant(Double)
-		case UnaryOperation((Double) -> Double)
-		case BinaryOperation((Double, Double) -> Double)
+		case UnaryOperation((Double) -> Double, (String) -> String, ((Double) -> String?)?)
+		case BinaryOperation((Double, Double) -> Double, (String, String) -> String, Int, ((Double, Double) -> String?)?)
 		case Equals
-		case NullaryOperation(() -> Double)
+		case NullaryOperation(() -> Double, String)
+		case Variable
 	}
 	
 	func performOperation(symbol: String) {
@@ -102,52 +113,28 @@ class CalculatorBrain {
 		if let operation = operations[symbol] {
 			
 			switch operation {
-			case .NullaryOperation(let function):
+			case .Variable:
+				accumulator = variableValues[symbol] != nil ? variableValues[symbol]! : 0.0
+				descriptionAccumulator = symbol
+			case .NullaryOperation(let function, let descriptionValue):
 				accumulator = function()
+				descriptionAccumulator = descriptionValue
 			case .Constant(let value):
 				accumulator = value
-				description += symbol
-				if isPartialResult {
-					pending!.secondOperandDescripted = true
-				}
-				
-			case .UnaryOperation(let function):
-				
-				// description
-				if isPartialResult {
-					description += symbol + addParenthesis(accumulator.description())
-					pending!.secondOperandDescripted = true
-				} else if !isPartialResult && description.isEmpty {
-					description = symbol + addParenthesis(accumulator.description())
-				} else {
-					description = symbol + addParenthesis(description)
-				}
-				
+				descriptionAccumulator = symbol
+			case .UnaryOperation(let function, let descriptionFunction, let validatingFunction):
+				error = validatingFunction?(accumulator)
 				accumulator = function(accumulator)
-			case .BinaryOperation(let function):
-				
-				// description
-				if !description.isEmpty && !isPartialResult && !parenthesisOperations.contains(symbol) {
-					description = addParenthesis(description) + " \(symbol) "
-				} else if !description.isEmpty && !isPartialResult {
-					description += " \(symbol) "
-				} else {
-					if isPartialResult && pending!.needParenthesis && !parenthesisOperations.contains(symbol) {
-						description = addParenthesis(description + accumulator.description()) + " \(symbol) "
-					} else {
-						description += accumulator.description() + " \(symbol) "
-					}
+				descriptionAccumulator = descriptionFunction(descriptionAccumulator)
+			case .BinaryOperation(let function, let descriptionFunction, let precedence, let validatingFunction):
+				if currentPrecedence < precedence {
+					descriptionAccumulator = addParenthesis(descriptionAccumulator)
 				}
+				currentPrecedence = precedence
 				
 				executePendingBinaryOperation()
-				pending = PerndingBinaryOperationInfo(binaryOperation: function, firstOperand: accumulator, secondOperandDescripted: false, needParenthesis: parenthesisOperations.contains(symbol))
+				pending = PerndingBinaryOperationInfo(binaryOperation: function, firstOperand: accumulator, descriptionFunction: descriptionFunction, descriptionOperand: descriptionAccumulator, validatingFunction: validatingFunction)
 			case .Equals:
-				
-				// description
-				if isPartialResult && !pending!.secondOperandDescripted {
-					description += accumulator.description()
-				}
-				
 				executePendingBinaryOperation()
 			}
 		}
@@ -157,12 +144,10 @@ class CalculatorBrain {
 		return "(" + string + ")"
 	}
 	
-	private func addToDescription(string: String) {
-		description += string
-	}
-	
 	private func executePendingBinaryOperation() {
 		if let pending = pending {
+			error = pending.validatingFunction?(pending.firstOperand, accumulator)
+			descriptionAccumulator = pending.descriptionFunction(pending.descriptionOperand, descriptionAccumulator)
 			accumulator = pending.binaryOperation(pending.firstOperand, accumulator)
 			self.pending = nil
 		}
@@ -173,8 +158,9 @@ class CalculatorBrain {
 	private struct PerndingBinaryOperationInfo {
 		var binaryOperation: (Double, Double) -> Double
 		var firstOperand: Double
-		var secondOperandDescripted: Bool
-		var needParenthesis: Bool
+		var descriptionFunction: (String, String) -> String
+		var descriptionOperand: String
+		var validatingFunction: ((Double, Double) -> String?)?
 	}
 	
 	typealias PropertyList = AnyObject
@@ -190,6 +176,7 @@ class CalculatorBrain {
 					if let operand = op as? Double {
 						setOperand(operand)
 					} else if let operation = op as? String {
+						if operations[operation] == nil { operations[operation] = Operation.Variable }
 						performOperation(operation)
 					}
 				}
@@ -200,8 +187,19 @@ class CalculatorBrain {
 	func clear() {
 		accumulator = 0
 		pending = nil
-		description = ""
+		currentPrecedence = Int.max
+		descriptionAccumulator = ""
 		internalProgram.removeAll()
+	}
+	
+	func clearVariables() {
+		variableValues = [:]
+	}
+	
+	func undoLast() {
+		if internalProgram.isEmpty { clear(); return }
+		internalProgram.removeLast()
+		program = internalProgram
 	}
 	
 	var result: Double {

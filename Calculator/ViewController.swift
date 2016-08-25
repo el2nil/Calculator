@@ -20,6 +20,15 @@ class ViewController: UIViewController {
 		}
 	}
 	
+	private var actionsDescription: String {
+		set {
+			actionsDisplay.text = newValue + (brain.isPartialResult ? "..." : " =")
+		}
+		get {
+			return actionsDisplay.text != nil ? actionsDisplay.text! : ""
+		}
+	}
+	
 	@IBOutlet weak var stack1: UIStackView!
 	@IBOutlet weak var stack2: UIStackView!
 	@IBOutlet weak var stack3: UIStackView!
@@ -56,11 +65,17 @@ class ViewController: UIViewController {
 			return nil
 		}
 		set {
-			if newValue != nil {
-				display.text = formatter.stringFromNumber(newValue!) ?? " "
+			if let error = brain.error {
+				display.text = error
 			} else {
-				display.text = " "
+				
+				if newValue != nil {
+					display.text = formatter.stringFromNumber(newValue!) ?? " "
+				} else {
+					display.text = " "
+				}
 			}
+			actionsDescription = brain.description
 		}
 	}
 	
@@ -119,17 +134,21 @@ class ViewController: UIViewController {
 	@IBAction func undo(sender: UIButton) {
 		if userIsInTheMiddleOfTyping {
 			display.text!.removeAtIndex(display.text!.endIndex.predecessor())
-		}
-		if display.text!.isEmpty {
-			userIsInTheMiddleOfTyping = false
+			if display.text!.isEmpty {
+				userIsInTheMiddleOfTyping = false
+				displayValue = brain.result
+			}
+		} else {
+			brain.undoLast()
 			displayValue = brain.result
 		}
+		
 	}
 	
 	@IBAction func clear() {
 		brain.clear()
-		actionsDisplay.text = ""
-//		display.text = "0"
+		brain.clearVariables()
+		actionsDisplay.text = " "
 		displayValue = nil
 		userIsInTheMiddleOfTyping = false
 	}
@@ -142,14 +161,30 @@ class ViewController: UIViewController {
 		if savedProgram != nil {
 			brain.program = savedProgram!
 			displayValue = brain.result
-			actionsDisplay.text = brain.description
+		}
+	}
+	
+	@IBAction func pushVariable(sender: UIButton) {
+		if let variableName = sender.currentTitle {
+			brain.setOperand(variableName)
+		}
+		displayValue = brain.result
+	}
+	
+	@IBAction func setVariable(sender: UIButton) {
+		if var variable = sender.currentTitle {
+			variable.removeAtIndex(sender.currentTitle!.startIndex)
+			if let value = displayValue {
+				userIsInTheMiddleOfTyping = false
+				brain.setVariable(variable, value: value)
+			}
+			displayValue = brain.result
 		}
 	}
 	
 	@IBAction private func performOperation(sender: UIButton) {
 		if let displayOp = displayValue {
 			if userIsInTheMiddleOfTyping {
-//				if display.text!.hasSuffix(".") { display.text! += "0" }
 				brain.setOperand(displayOp)
 				userIsInTheMiddleOfTyping = false
 			}
@@ -157,12 +192,6 @@ class ViewController: UIViewController {
 				brain.performOperation(mathematicalSymblol)
 			}
 			displayValue = brain.result
-			
-			if brain.isPartialResult {
-				actionsDisplay.text = brain.description + " ..."
-			} else {
-				actionsDisplay.text = brain.description + " = "
-			}
 		}
 	}
 	
