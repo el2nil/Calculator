@@ -96,16 +96,16 @@ class AxesDrawer
             {
 				
 				let label = formatter.string(from: NSNumber(value: Float((origin.x-bbox.minX)/pointsPerUnit)))!
-                if let leftHashmarkPoint = alignedPoint(x: bbox.minX, y: origin.y, insideBounds:bounds) {
+                if let leftHashmarkPoint = alignedPoint(bbox.minX, y: origin.y, insideBounds:bounds) {
                     drawHashmarkAtLocation(leftHashmarkPoint, .top("-\(label)"))
                 }
-                if let rightHashmarkPoint = alignedPoint(x: bbox.maxX, y: origin.y, insideBounds:bounds) {
+                if let rightHashmarkPoint = alignedPoint(bbox.maxX, y: origin.y, insideBounds:bounds) {
                     drawHashmarkAtLocation(rightHashmarkPoint, .top(label))
                 }
-                if let topHashmarkPoint = alignedPoint(x: origin.x, y: bbox.minY, insideBounds:bounds) {
+                if let topHashmarkPoint = alignedPoint(origin.x, y: bbox.minY, insideBounds:bounds) {
                     drawHashmarkAtLocation(topHashmarkPoint, .left(label))
                 }
-                if let bottomHashmarkPoint = alignedPoint(x: origin.x, y: bbox.maxY, insideBounds:bounds) {
+                if let bottomHashmarkPoint = alignedPoint(origin.x, y: bbox.maxY, insideBounds:bounds) {
                     drawHashmarkAtLocation(bottomHashmarkPoint, .left("-\(label)"))
                 }
 				bbox.insetBy(dx: -pointsPerHashmark, dy: -pointsPerHashmark)
@@ -171,7 +171,7 @@ class AxesDrawer
     // if contentScaleFactor is left to its default (1), then things will be on the nearest "point" boundary instead
     // the lines will still be sharp in that case, but might be a pixel (or more theoretically) off of where they should be
 
-    fileprivate func alignedPoint(x: CGFloat, y: CGFloat, insideBounds: CGRect? = nil) -> CGPoint?
+    fileprivate func alignedPoint(_ x: CGFloat, y: CGFloat, insideBounds: CGRect? = nil) -> CGPoint?
     {
         let point = CGPoint(x: align(x), y: align(y))
         if let permissibleBounds = insideBounds , !permissibleBounds.contains(point) {
