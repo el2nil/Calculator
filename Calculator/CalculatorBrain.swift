@@ -155,7 +155,7 @@ class CalculatorBrain {
 		var secodndOperandSetted: Bool
 	}
 	
-	typealias PropertyList = AnyObject
+	typealias PropertyList = [AnyObject]
 	
 	var program: PropertyList {
 		get {
@@ -163,8 +163,8 @@ class CalculatorBrain {
 		}
 		set {
 			clear()
-			if let arrayOfObjects = newValue as? [AnyObject] {
-				for op in arrayOfObjects {
+//			if let arrayOfObjects = newValue as? CalculatorBrain.PropertyList {
+				for op in newValue {
 					if let operand = op as? Double {
 						setOperand(operand)
 					} else if let operation = op as? String {
@@ -172,7 +172,7 @@ class CalculatorBrain {
 						performOperation(operation)
 					}
 				}
-			}
+//			}
 		}
 	}
 	

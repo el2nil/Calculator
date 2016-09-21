@@ -134,11 +134,11 @@ class CalculatorViewController: UIViewController {
 	}
 	
 	fileprivate var graphProgram: CalculatorBrain.PropertyList? {
-		get { return defaults.object(forKey: defaultsKeys.graphProgram) as? [AnyObject] }
+		get { return defaults.object(forKey: defaultsKeys.graphProgram) as? CalculatorBrain.PropertyList }
 		set { defaults.set(newValue, forKey: defaultsKeys.graphProgram) }
 	}
 	fileprivate var brainProgram: CalculatorBrain.PropertyList? {
-		get { return defaults.object(forKey: defaultsKeys.brainBrogram) as? [AnyObject] }
+		get { return defaults.object(forKey: defaultsKeys.brainBrogram) as? CalculatorBrain.PropertyList }
 		set { defaults.set(newValue, forKey: defaultsKeys.brainBrogram) }
 	}
 	
