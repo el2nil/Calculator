@@ -8,25 +8,6 @@
 
 import Foundation
 
-extension Double {
-	func description() -> String {
-		
-		return deleteDecimalZeros(String(self))
-		
-	}
-}
-
-func deleteDecimalZeros(inputString: String) -> String {
-	
-	if let range = inputString.rangeOfString(".0") where inputString.hasSuffix(".0") {
-		var newString = inputString
-		newString.removeRange(range)
-		return newString
-	}
-	
-	return inputString
-}
-
 class CalculatorBrain {
 	
 	// MARK: Properties
@@ -44,7 +25,8 @@ class CalculatorBrain {
 			if pending == nil {
 				return descriptionAccumulator
 			} else {
-				return pending!.descriptionFunction(pending!.descriptionOperand, pending!.descriptionOperand != descriptionAccumulator ? descriptionAccumulator : "")
+//				return pending!.descriptionFunction(pending!.descriptionOperand, pending!.descriptionOperand != descriptionAccumulator ? descriptionAccumulator : "")
+				return pending!.descriptionFunction(pending!.descriptionOperand, pending!.secodndOperandSetted ? descriptionAccumulator : "")
 			}
 		}
 	}
@@ -62,7 +44,12 @@ class CalculatorBrain {
 		}
 	}
 	
+	// MARK: Methods
+	
 	func setOperand(variableName: String) {
+		if pending != nil && !pending!.secodndOperandSetted {
+			pending!.secodndOperandSetted = true
+		}
 		operations[variableName] = Operation.Variable
 		performOperation(variableName)
 	}
@@ -73,6 +60,9 @@ class CalculatorBrain {
 	}
 	
 	func setOperand(operand: Double) {
+		if pending != nil && !pending!.secodndOperandSetted {
+			pending!.secodndOperandSetted = true
+		}
 		accumulator = operand
 		internalProgram.append(operand)
 		descriptionAccumulator = String(format: "%g", accumulator)
@@ -133,7 +123,7 @@ class CalculatorBrain {
 				currentPrecedence = precedence
 				
 				executePendingBinaryOperation()
-				pending = PerndingBinaryOperationInfo(binaryOperation: function, firstOperand: accumulator, descriptionFunction: descriptionFunction, descriptionOperand: descriptionAccumulator, validatingFunction: validatingFunction)
+				pending = PerndingBinaryOperationInfo(binaryOperation: function, firstOperand: accumulator, descriptionFunction: descriptionFunction, descriptionOperand: descriptionAccumulator, validatingFunction: validatingFunction, secodndOperandSetted: false)
 			case .Equals:
 				executePendingBinaryOperation()
 			}
@@ -145,7 +135,8 @@ class CalculatorBrain {
 	}
 	
 	private func executePendingBinaryOperation() {
-		if let pending = pending {
+		if var pending = pending {
+			pending.secodndOperandSetted = false
 			error = pending.validatingFunction?(pending.firstOperand, accumulator)
 			descriptionAccumulator = pending.descriptionFunction(pending.descriptionOperand, descriptionAccumulator)
 			accumulator = pending.binaryOperation(pending.firstOperand, accumulator)
@@ -161,6 +152,7 @@ class CalculatorBrain {
 		var descriptionFunction: (String, String) -> String
 		var descriptionOperand: String
 		var validatingFunction: ((Double, Double) -> String?)?
+		var secodndOperandSetted: Bool
 	}
 	
 	typealias PropertyList = AnyObject
@@ -187,6 +179,7 @@ class CalculatorBrain {
 	func clear() {
 		accumulator = 0
 		pending = nil
+		error = nil
 		currentPrecedence = Int.max
 		descriptionAccumulator = ""
 		internalProgram.removeAll()
@@ -209,6 +202,8 @@ class CalculatorBrain {
 	}
 	
 }
+
+// MARK: Formatter
 
 let formatter: NSNumberFormatter = {
 	let formatter = NSNumberFormatter()

@@ -9,11 +9,30 @@
 import UIKit
 import Foundation
 
-class ViewController: UIViewController {
+class CalculatorViewController: UIViewController {
 	
 	// MARK: Properties
+	@IBOutlet weak var graphButton: UIButton! {
+		didSet {
+			setupGraphButton()
+		}
+	}
+	
+	private func setupGraphButton() {
+		if let graphButton = graphButton {
+			if brain.description.isEmpty || brain.isPartialResult {
+				graphButton.highlighted = true
+				graphButton.enabled = false
+			} else {
+				graphButton.highlighted = false
+				graphButton.enabled = true
+			}
+		}
+		
+	}
+	
 	@IBOutlet private weak var display: UILabel!
-	@IBOutlet weak var actionsDisplay: UILabel!
+	@IBOutlet private weak var actionsDisplay: UILabel!
 	@IBOutlet weak var dotButton: UIButton! {
 		didSet {
 			dotButton.setTitle(decimalSeparator, forState: .Normal)
@@ -23,6 +42,7 @@ class ViewController: UIViewController {
 	private var actionsDescription: String {
 		set {
 			actionsDisplay.text = newValue + (brain.isPartialResult ? "..." : " =")
+			setupGraphButton()
 		}
 		get {
 			return actionsDisplay.text != nil ? actionsDisplay.text! : ""
@@ -53,14 +73,14 @@ class ViewController: UIViewController {
 	
 	private var userIsInTheMiddleOfTyping = false
 	
-	let decimalSeparator = formatter.decimalSeparator ?? "."
+	private let decimalSeparator = formatter.decimalSeparator ?? "."
 	
 	private var brain = CalculatorBrain()
 	
 	private var displayValue: Double? {
 		get {
-			if let text = display.text, value = Double(text) {
-				return value
+			if let text = display.text, number = formatter.numberFromString(text) {
+				return number.doubleValue
 			}
 			return nil
 		}
@@ -70,21 +90,16 @@ class ViewController: UIViewController {
 			} else {
 				
 				if newValue != nil {
-					display.text = formatter.stringFromNumber(newValue!) ?? " "
+					display.text = formatter.stringFromNumber(newValue!) ?? "0"
 				} else {
-					display.text = " "
+					display.text = "0"
 				}
 			}
 			actionsDescription = brain.description
 		}
 	}
 	
-	var savedProgram: CalculatorBrain.PropertyList?
-	
-	override func willTransitionToTraitCollection(newCollection: UITraitCollection, withTransitionCoordinator coordinator: UIViewControllerTransitionCoordinator) {
-		super.willTransitionToTraitCollection(newCollection, withTransitionCoordinator: coordinator)
-		configureView(newCollection.verticalSizeClass, buttonBlank: buttonBlank)
-	}
+	private var savedProgram: CalculatorBrain.PropertyList?
 	
 	private func configureView(verticalSizeClass: UIUserInterfaceSizeClass, buttonBlank: UIButton) {
 		if (verticalSizeClass == .Compact) {
@@ -107,6 +122,40 @@ class ViewController: UIViewController {
 	}
 	
 	// MARK: Actions
+	
+	private struct StoryBoard {
+		static let ShowGraph = "Show Graph"
+	}
+	
+	private let defaults = NSUserDefaults.standardUserDefaults()
+	private struct defaultsKeys {
+		static let graphProgram = "CalculatorViewController.graphProgram"
+		static let brainBrogram = "CalculatorViewController.brainProgram"
+	}
+	
+	private var graphProgram: CalculatorBrain.PropertyList? {
+		get { return defaults.objectForKey(defaultsKeys.graphProgram) as? [AnyObject] }
+		set { defaults.setObject(newValue, forKey: defaultsKeys.graphProgram) }
+	}
+	private var brainProgram: CalculatorBrain.PropertyList? {
+		get { return defaults.objectForKey(defaultsKeys.brainBrogram) as? [AnyObject] }
+		set { defaults.setObject(newValue, forKey: defaultsKeys.brainBrogram) }
+	}
+	
+	@IBAction func showGraph(sender: UIButton) {
+		graphProgram = brain.program
+		if let graphNC = splitViewController?.viewControllers.last as? UINavigationController {
+			if let graphVC = graphNC.topViewController as? GraphViewController {
+				prepareGraphVC(graphVC)
+			} else {
+				performSegueWithIdentifier(StoryBoard.ShowGraph, sender: nil)
+			}
+		}
+		
+		
+	}
+	
+	
 	@IBAction private func touchDigit(sender: UIButton) {
 		let digit = sender.currentTitle!
 		if userIsInTheMiddleOfTyping {
@@ -148,7 +197,7 @@ class ViewController: UIViewController {
 	@IBAction func clear() {
 		brain.clear()
 		brain.clearVariables()
-		actionsDisplay.text = " "
+		actionsDescription = " "
 		displayValue = nil
 		userIsInTheMiddleOfTyping = false
 	}
@@ -183,6 +232,9 @@ class ViewController: UIViewController {
 	}
 	
 	@IBAction private func performOperation(sender: UIButton) {
+		if let _ = brain.error {
+			brain.clear()
+		}
 		if let displayOp = displayValue {
 			if userIsInTheMiddleOfTyping {
 				brain.setOperand(displayOp)
@@ -195,7 +247,69 @@ class ViewController: UIViewController {
 		}
 	}
 	
-	// MARK: Other
+	// MARK: Lifecycle
+	
+	override func viewDidLoad() {
+		super.viewDidLoad()
+		
+		if let gProgram = graphProgram {
+			brain.program = gProgram
+			displayValue = brain.result
+			actionsDescription = brain.description
+		}
+		if let graphNC = splitViewController?.viewControllers.last as? UINavigationController {
+			if let graphVC = graphNC.topViewController as? GraphViewController {
+				prepareGraphVC(graphVC)
+				
+			}
+			//			if let bProgram = brainProgram {
+			//				brain.program = bProgram
+			//				displayValue = brain.result
+			//				actionsDescription = brain.description
+			//			}
+		}
+	}
+	
+	override func viewWillAppear(animated: Bool) {
+		super.viewWillAppear(animated)
+		self.navigationController?.setNavigationBarHidden(true, animated: false)
+	}
+	
+	override func viewWillDisappear(animated: Bool) {
+		super.viewWillDisappear(animated)
+		self.navigationController?.setNavigationBarHidden(false, animated: false)
+	}
+	
+	
+	
+	override func willTransitionToTraitCollection(newCollection: UITraitCollection, withTransitionCoordinator coordinator: UIViewControllerTransitionCoordinator) {
+		super.willTransitionToTraitCollection(newCollection, withTransitionCoordinator: coordinator)
+		configureView(newCollection.verticalSizeClass, buttonBlank: buttonBlank)
+	}
+	
+	override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
+		if let graphNC = segue.destinationViewController as? UINavigationController, identifer = segue.identifier where identifer == StoryBoard.ShowGraph {
+			if let graphVC = graphNC.topViewController as? GraphViewController {
+				
+				graphVC.title = brain.description
+				graphVC.functionForDraw = { [weak weakSelf = self] in
+					weakSelf?.brain.setVariable("M", value: $0)
+					return weakSelf?.brain.result}
+				
+			}
+		}
+	}
+	
+	private func prepareGraphVC(graphVC: GraphViewController) {
+		graphVC.title = brain.description
+		graphVC.functionForDraw = { [weak weakSelf = self] in
+			weakSelf?.brain.setVariable("M", value: $0)
+			return weakSelf?.brain.result}
+	}
+	
+	override func shouldPerformSegueWithIdentifier(identifier: String, sender: AnyObject?) -> Bool {
+		return !brain.isPartialResult
+	}
 	
 }
 

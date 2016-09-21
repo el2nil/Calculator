@@ -3,10 +3,103 @@
    version = "1.0">
    <ContextStates>
       <ContextState
-         contextName = "CalculatorBrain.program.getter:CalculatorBrain.swift">
+         contextName = "CalculatorBrain.(executePendingBinaryOperation in _CDA2C7058BF57092EA9C80E6A31CE4D6)() -&gt; ():CalculatorBrain.swift">
          <PersistentStrings>
             <PersistentString
-               value = "self.internalProgram">
+               value = "descriptionAccumulator">
+            </PersistentString>
+            <PersistentString
+               value = "pending.descriptionOperand">
+            </PersistentString>
+            <PersistentString
+               value = "accumulator">
+            </PersistentString>
+         </PersistentStrings>
+      </ContextState>
+      <ContextState
+         contextName = "CalculatorBrain.(addToDescription in _CDA2C7058BF57092EA9C80E6A31CE4D6)(String) -&gt; ():CalculatorBrain.swift">
+         <PersistentStrings>
+            <PersistentString
+               value = "descriptionBuffer">
+            </PersistentString>
+         </PersistentStrings>
+      </ContextState>
+      <ContextState
+         contextName = "CalculatorViewController.showGraph(UIButton) -&gt; ():CalculatorViewController.swift">
+         <PersistentStrings>
+            <PersistentString
+               value = "splitViewController?.viewControllers">
+            </PersistentString>
+         </PersistentStrings>
+      </ContextState>
+      <ContextState
+         contextName = "GraphView.drawFunctionInRect(CGRect, origin : CGPoint, scale : CGFloat) -&gt; ():GraphView.swift">
+         <PersistentStrings>
+            <PersistentString
+               value = "originOffset">
+            </PersistentString>
+         </PersistentStrings>
+      </ContextState>
+      <ContextState
+         contextName = "CalculatorViewController.(displayValue in _6719A0F83295296111A8FFF88AACD05C).setter:CalculatorViewController.swift">
+         <PersistentStrings>
+            <PersistentString
+               value = "brain.description">
+            </PersistentString>
+            <PersistentString
+               value = "formatter.stringFromNumber(newValue!)">
+            </PersistentString>
+            <PersistentString
+               value = "decimalSeparator">
+            </PersistentString>
+         </PersistentStrings>
+      </ContextState>
+      <ContextState
+         contextName = "CalculatorViewController.(displayValue in _6719A0F83295296111A8FFF88AACD05C).getter:CalculatorViewController.swift">
+         <PersistentStrings>
+            <PersistentString
+               value = "Double(display.text)">
+            </PersistentString>
+            <PersistentString
+               value = "Double(1,1)">
+            </PersistentString>
+         </PersistentStrings>
+      </ContextState>
+      <ContextState
+         contextName = "AppDelegate.applicationWillResignActive(UIApplication) -&gt; ():AppDelegate.swift">
+         <PersistentStrings>
+            <PersistentString
+               value = "window">
+            </PersistentString>
+         </PersistentStrings>
+      </ContextState>
+      <ContextState
+         contextName = "CalculatorViewController.viewDidLoad() -&gt; ():CalculatorViewController.swift">
+         <PersistentStrings>
+            <PersistentString
+               value = "graphProgram">
+            </PersistentString>
+            <PersistentString
+               value = "displayValue">
+            </PersistentString>
+            <PersistentString
+               value = "savedProgram.count">
+            </PersistentString>
+         </PersistentStrings>
+      </ContextState>
+      <ContextState
+         contextName = "CalculatorBrain.program.setter:CalculatorBrain.swift">
+         <PersistentStrings>
+            <PersistentString
+               value = "arrayOfObjects">
+            </PersistentString>
+         </PersistentStrings>
+      </ContextState>
+      <ContextState
+         contextName = "CalculatorBrain.result.getter:CalculatorBrain.swift">
+         <PersistentStrings>
+            <PersistentString
+               value = "accumulator">
             </PersistentString>
          </PersistentStrings>
       </ContextState>
@@ -28,16 +121,18 @@
          </PersistentStrings>
       </ContextState>
       <ContextState
-         contextName = "CalculatorBrain.(executePendingBinaryOperation in _CDA2C7058BF57092EA9C80E6A31CE4D6)() -&gt; ():CalculatorBrain.swift">
+         contextName = "CalculatorViewController.prepareForSegue(UIStoryboardSegue, sender : AnyObject?) -&gt; ():CalculatorViewController.swift">
          <PersistentStrings>
             <PersistentString
-               value = "pending.descriptionOperand">
+               value = "segue.destinationViewController">
             </PersistentString>
+         </PersistentStrings>
+      </ContextState>
+      <ContextState
+         contextName = "GraphView.init(coder : NSCoder) -&gt; GraphView?:GraphView.swift">
+         <PersistentStrings>
             <PersistentString
-               value = "accumulator">
-            </PersistentString>
-            <PersistentString
-               value = "descriptionAccumulator">
+               value = "bounds">
             </PersistentString>
          </PersistentStrings>
       </ContextState>
@@ -50,32 +145,19 @@
             <PersistentString
                value = "isPartialResult">
             </PersistentString>
-         </PersistentStrings>
-      </ContextState>
-      <ContextState
-         contextName = "ViewController.save() -&gt; ():ViewController.swift">
-         <PersistentStrings>
             <PersistentString
-               value = "savedProgram">
-            </PersistentString>
-            <PersistentString
-               value = "internalProgram">
+               value = "descriptionAccumulator">
             </PersistentString>
          </PersistentStrings>
       </ContextState>
       <ContextState
-         contextName = "CalculatorBrain.(addToDescription in _CDA2C7058BF57092EA9C80E6A31CE4D6)(String) -&gt; ():CalculatorBrain.swift">
+         contextName = "CalculatorBrain.description.getter:CalculatorBrain.swift">
          <PersistentStrings>
             <PersistentString
-               value = "descriptionBuffer">
+               value = "descriptionAccumulator">
             </PersistentString>
-         </PersistentStrings>
-      </ContextState>
-      <ContextState
-         contextName = "CalculatorBrain.program.setter:CalculatorBrain.swift">
-         <PersistentStrings>
             <PersistentString
-               value = "arrayOfObjects">
+               value = "pending!.descriptionOperand">
             </PersistentString>
          </PersistentStrings>
       </ContextState>
@@ -91,10 +173,21 @@
          </PersistentStrings>
       </ContextState>
       <ContextState
-         contextName = "ViewController.(actionsDescription in _D479D7C443B6E5D6A8B2A48BE681A439).setter:ViewController.swift">
+         contextName = "GraphView.(drawFunctionInRect in _640F6D43720BA197323D767A11A18928)(CGRect, origin : CGPoint, scale : CGFloat) -&gt; ():GraphView.swift">
          <PersistentStrings>
             <PersistentString
-               value = "displayValue">
+               value = "path">
+            </PersistentString>
+         </PersistentStrings>
+      </ContextState>
+      <ContextState
+         contextName = "ViewController.save() -&gt; ():ViewController.swift">
+         <PersistentStrings>
+            <PersistentString
+               value = "savedProgram">
+            </PersistentString>
+            <PersistentString
+               value = "internalProgram">
             </PersistentString>
          </PersistentStrings>
       </ContextState>
@@ -102,10 +195,70 @@
          contextName = "CalculatorBrain.performOperation(String) -&gt; ():CalculatorBrain.swift">
          <PersistentStrings>
             <PersistentString
-               value = "isPartialResult">
+               value = "description.isEmpty">
             </PersistentString>
             <PersistentString
-               value = "description.isEmpty">
+               value = "accumulator">
+            </PersistentString>
+            <PersistentString
+               value = "descriptionAccumulator">
+            </PersistentString>
+         </PersistentStrings>
+      </ContextState>
+      <ContextState
+         contextName = "GraphView.drawRect(CGRect) -&gt; ():GraphView.swift">
+         <PersistentStrings>
+            <PersistentString
+               value = "originOffset">
+            </PersistentString>
+         </PersistentStrings>
+      </ContextState>
+      <ContextState
+         contextName = "GraphViewController.init(coder : NSCoder) -&gt; GraphViewController?:GraphViewController.swift">
+         <PersistentStrings>
+            <PersistentString
+               value = "functionForDraw">
+            </PersistentString>
+         </PersistentStrings>
+      </ContextState>
+      <ContextState
+         contextName = "GraphViewController.functionForDraw.didset:GraphViewController.swift">
+         <PersistentStrings>
+            <PersistentString
+               value = "graphView">
+            </PersistentString>
+            <PersistentString
+               value = "functionForDraw">
+            </PersistentString>
+            <PersistentString
+               value = "splitViewController?.viewControllers.first as? UINavigationController">
+            </PersistentString>
+         </PersistentStrings>
+      </ContextState>
+      <ContextState
+         contextName = "GraphViewController.graphView.didset:GraphViewController.swift">
+         <PersistentStrings>
+            <PersistentString
+               value = "graphView">
+            </PersistentString>
+            <PersistentString
+               value = "originOffset">
+            </PersistentString>
+         </PersistentStrings>
+      </ContextState>
+      <ContextState
+         contextName = "CalculatorBrain.program.getter:CalculatorBrain.swift">
+         <PersistentStrings>
+            <PersistentString
+               value = "self.internalProgram">
+            </PersistentString>
+         </PersistentStrings>
+      </ContextState>
+      <ContextState
+         contextName = "CalculatorViewController.(performOperation in _6719A0F83295296111A8FFF88AACD05C)(UIButton) -&gt; ():CalculatorViewController.swift">
+         <PersistentStrings>
+            <PersistentString
+               value = "displayValue">
             </PersistentString>
          </PersistentStrings>
       </ContextState>
@@ -117,6 +270,102 @@
             </PersistentString>
             <PersistentString
                value = "brain.error">
+            </PersistentString>
+         </PersistentStrings>
+      </ContextState>
+      <ContextState
+         contextName = "GraphView.(origin in _640F6D43720BA197323D767A11A18928).setter:GraphView.swift">
+         <PersistentStrings>
+            <PersistentString
+               value = "graphCentre">
+            </PersistentString>
+            <PersistentString
+               value = "originOffset">
+            </PersistentString>
+         </PersistentStrings>
+      </ContextState>
+      <ContextState
+         contextName = "SplitViewController.(updateButtons in _A3DFB9A756DA45635D27293546F139C9)() -&gt; ():SplitViewController.swift">
+         <PersistentStrings>
+            <PersistentString
+               value = "self.displayMode">
+            </PersistentString>
+         </PersistentStrings>
+      </ContextState>
+      <ContextState
+         contextName = "SplitViewController.viewDidLoad() -&gt; ():SplitViewController.swift">
+         <PersistentStrings>
+            <PersistentString
+               value = "self.displayMode">
+            </PersistentString>
+            <PersistentString
+               value = "self.preferredDisplayMode">
+            </PersistentString>
+            <PersistentString
+               value = "nc.toolbarItems">
+            </PersistentString>
+         </PersistentStrings>
+      </ContextState>
+      <ContextState
+         contextName = "CalculatorViewController.(prepareGraphVC in _6719A0F83295296111A8FFF88AACD05C)(GraphViewController) -&gt; ():CalculatorViewController.swift">
+         <PersistentStrings>
+            <PersistentString
+               value = "graphVC.title">
+            </PersistentString>
+         </PersistentStrings>
+      </ContextState>
+      <ContextState
+         contextName = "GraphView.originOffset.didset:GraphView.swift">
+         <PersistentStrings>
+            <PersistentString
+               value = "bounds.size.width">
+            </PersistentString>
+            <PersistentString
+               value = "originOffset">
+            </PersistentString>
+         </PersistentStrings>
+      </ContextState>
+      <ContextState
+         contextName = "GraphViewController.viewWillLayoutSubviews() -&gt; ():GraphViewController.swift">
+         <PersistentStrings>
+            <PersistentString
+               value = "oldWidth">
+            </PersistentString>
+            <PersistentString
+               value = "originOffset">
+            </PersistentString>
+         </PersistentStrings>
+      </ContextState>
+      <ContextState
+         contextName = "CalculatorViewController.(setupGraphButton in _6719A0F83295296111A8FFF88AACD05C)() -&gt; ():CalculatorViewController.swift">
+         <PersistentStrings>
+            <PersistentString
+               value = "actions">
+            </PersistentString>
+            <PersistentString
+               value = "brain.isPartialResult">
+            </PersistentString>
+         </PersistentStrings>
+      </ContextState>
+      <ContextState
+         contextName = "ViewController.(actionsDescription in _D479D7C443B6E5D6A8B2A48BE681A439).setter:ViewController.swift">
+         <PersistentStrings>
+            <PersistentString
+               value = "displayValue">
+            </PersistentString>
+         </PersistentStrings>
+      </ContextState>
+      <ContextState
+         contextName = "GraphViewController.viewWillDisappear(Bool) -&gt; ():GraphViewController.swift">
+         <PersistentStrings>
+            <PersistentString
+               value = "scale">
+            </PersistentString>
+            <PersistentString
+               value = "graphView.originOffset">
+            </PersistentString>
+            <PersistentString
+               value = "originOffset">
             </PersistentString>
          </PersistentStrings>
       </ContextState>
