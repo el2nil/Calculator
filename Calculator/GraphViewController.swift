@@ -18,7 +18,7 @@ class GraphViewController: UIViewController {
 	}
 	
 	
-	var functionForDraw: ((x: Double) -> Double?)? {
+	var functionForDraw: ((_ x: Double) -> Double?)? {
 		didSet {
 			if let graphView = graphView {
 				graphView.functionForDraw = functionForDraw
@@ -26,27 +26,27 @@ class GraphViewController: UIViewController {
 		}
 	}
 	
-	let defaults = NSUserDefaults.standardUserDefaults()
-	private struct Keys {
+	let defaults = UserDefaults.standard
+	fileprivate struct Keys {
 		static let Origin = "GraphViewControler.Origin"
 		static let Scale = "GraphviewController.Scale"
 	}
 	
-	private var scale: CGFloat {
-		get { return defaults.objectForKey(Keys.Scale) as? CGFloat ?? CGFloat(1.0) }
-		set { defaults.setObject(newValue, forKey: Keys.Scale) }
+	fileprivate var scale: CGFloat {
+		get { return defaults.object(forKey: Keys.Scale) as? CGFloat ?? CGFloat(1.0) }
+		set { defaults.set(newValue, forKey: Keys.Scale) }
 	}
 	
-	private var originOffset: CGPoint {
+	fileprivate var originOffset: CGPoint {
 		get {
-			let originArray = defaults.objectForKey(Keys.Origin) as? [CGFloat]
+			let originArray = defaults.object(forKey: Keys.Origin) as? [CGFloat]
 			let factor = CGPoint(x: originArray?.first ?? CGFloat(0.0), y: originArray?.last ?? CGFloat(0.0))
 			return CGPoint(x: graphView.bounds.size.width * factor.x, y: graphView.bounds.size.height * factor.y)
 		}
 		set {
 			let factor = CGPoint(x: newValue.x / graphView.bounds.size.width,
 			                     y: newValue.y / graphView.bounds.size.height)
-			defaults.setObject([factor.x, factor.y], forKey: Keys.Origin)
+			defaults.set([factor.x, factor.y], forKey: Keys.Origin)
 		}
 	}
 	
@@ -57,7 +57,7 @@ class GraphViewController: UIViewController {
 		
 	}
 	
-	private var oldWidth: CGFloat = 0
+	fileprivate var oldWidth: CGFloat = 0
 	
 	override func viewWillLayoutSubviews() {
 		super.viewWillLayoutSubviews()
@@ -72,7 +72,7 @@ class GraphViewController: UIViewController {
 		}
 	}
 	
-	override func viewWillDisappear(animated: Bool) {
+	override func viewWillDisappear(_ animated: Bool) {
 		super.viewWillDisappear(animated)
 		originOffset = graphView.originOffset
 		scale = graphView.scale

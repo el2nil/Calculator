@@ -19,26 +19,26 @@ class SplitViewController: UISplitViewController, UISplitViewControllerDelegate 
 		
 	}
 	
-	func splitViewController(splitViewController: UISplitViewController, collapseSecondaryViewController secondaryViewController: UIViewController, ontoPrimaryViewController primaryViewController: UIViewController) -> Bool {
+	func splitViewController(_ splitViewController: UISplitViewController, collapseSecondary secondaryViewController: UIViewController, onto primaryViewController: UIViewController) -> Bool {
 		return true
 	}
 	
-	private func updateButtons() {
+	fileprivate func updateButtons() {
 		if let nc = viewControllers[viewControllers.count-1] as? UINavigationController {
-			let GraphCalcButton = displayModeButtonItem()
-			nc.topViewController?.navigationItem.setLeftBarButtonItem(GraphCalcButton, animated: false)
+			let GraphCalcButton = displayModeButtonItem
+			nc.topViewController?.navigationItem.setLeftBarButton(GraphCalcButton, animated: false)
 		}
 	}
 	
-	func splitViewController(svc: UISplitViewController, willChangeToDisplayMode displayMode: UISplitViewControllerDisplayMode) {
+	func splitViewController(_ svc: UISplitViewController, willChangeTo displayMode: UISplitViewControllerDisplayMode) {
 		switch displayMode {
-		case .PrimaryHidden:
+		case .primaryHidden:
 			updateButtons()
 		default: break
 		}
 	}
 	
-	override func viewWillDisappear(animated: Bool) {
+	override func viewWillDisappear(_ animated: Bool) {
 		super.viewWillDisappear(animated)
 	}
 	

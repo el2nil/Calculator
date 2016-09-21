@@ -18,28 +18,28 @@ class CalculatorViewController: UIViewController {
 		}
 	}
 	
-	private func setupGraphButton() {
+	fileprivate func setupGraphButton() {
 		if let graphButton = graphButton {
 			if brain.description.isEmpty || brain.isPartialResult {
-				graphButton.highlighted = true
-				graphButton.enabled = false
+				graphButton.isHighlighted = true
+				graphButton.isEnabled = false
 			} else {
-				graphButton.highlighted = false
-				graphButton.enabled = true
+				graphButton.isHighlighted = false
+				graphButton.isEnabled = true
 			}
 		}
 		
 	}
 	
-	@IBOutlet private weak var display: UILabel!
-	@IBOutlet private weak var actionsDisplay: UILabel!
+	@IBOutlet fileprivate weak var display: UILabel!
+	@IBOutlet fileprivate weak var actionsDisplay: UILabel!
 	@IBOutlet weak var dotButton: UIButton! {
 		didSet {
-			dotButton.setTitle(decimalSeparator, forState: .Normal)
+			dotButton.setTitle(decimalSeparator, for: UIControlState())
 		}
 	}
 	
-	private var actionsDescription: String {
+	fileprivate var actionsDescription: String {
 		set {
 			actionsDisplay.text = newValue + (brain.isPartialResult ? "..." : " =")
 			setupGraphButton()
@@ -63,23 +63,23 @@ class CalculatorViewController: UIViewController {
 	@IBOutlet weak var cos_1: UIButton!
 	@IBOutlet weak var rand: UIButton!
 	
-	private lazy var buttonBlank: UIButton = {
-		let button = UIButton(frame: CGRectMake(100,400,100,50))
-		button.backgroundColor = UIColor.blackColor()
-		button.setTitle("", forState: .Normal)
+	fileprivate lazy var buttonBlank: UIButton = {
+		let button = UIButton(frame: CGRect(x: 100,y: 400,width: 100,height: 50))
+		button.backgroundColor = UIColor.black
+		button.setTitle("", for: UIControlState())
 		return button
 	}()
 	
 	
-	private var userIsInTheMiddleOfTyping = false
+	fileprivate var userIsInTheMiddleOfTyping = false
 	
-	private let decimalSeparator = formatter.decimalSeparator ?? "."
+	fileprivate let decimalSeparator = formatter.decimalSeparator ?? "."
 	
-	private var brain = CalculatorBrain()
+	fileprivate var brain = CalculatorBrain()
 	
-	private var displayValue: Double? {
+	fileprivate var displayValue: Double? {
 		get {
-			if let text = display.text, let number = formatter.numberFromString(text) {
+			if let text = display.text, let number = formatter.number(from: text) {
 				return number.doubleValue
 			}
 			return nil
@@ -90,7 +90,7 @@ class CalculatorViewController: UIViewController {
 			} else {
 				
 				if newValue != nil {
-					display.text = formatter.stringFromNumber(newValue!) ?? "0"
+					display.text = formatter.string(from: NSNumber(value: newValue!)) ?? "0"
 				} else {
 					display.text = "0"
 				}
@@ -99,19 +99,19 @@ class CalculatorViewController: UIViewController {
 		}
 	}
 	
-	private var savedProgram: CalculatorBrain.PropertyList?
+	fileprivate var savedProgram: CalculatorBrain.PropertyList?
 	
-	private func configureView(verticalSizeClass: UIUserInterfaceSizeClass, buttonBlank: UIButton) {
-		if (verticalSizeClass == .Compact) {
+	fileprivate func configureView(_ verticalSizeClass: UIUserInterfaceSizeClass, buttonBlank: UIButton) {
+		if (verticalSizeClass == .compact) {
 			stack1.addArrangedSubview(buttonBlank)
 			stack3.addArrangedSubview(x_2)
 			stack4.addArrangedSubview(x_1)
 			stack5.addArrangedSubview(sin_1)
 			stack6.addArrangedSubview(cos_1)
 			stack7.addArrangedSubview(rand)
-			stack2.hidden = true
+			stack2.isHidden = true
 		} else {
-			stack2.hidden = false
+			stack2.isHidden = false
 			stack2.addArrangedSubview(x_2)
 			stack2.addArrangedSubview(x_1)
 			stack2.addArrangedSubview(sin_1)
@@ -123,32 +123,32 @@ class CalculatorViewController: UIViewController {
 	
 	// MARK: Actions
 	
-	private struct StoryBoard {
+	fileprivate struct StoryBoard {
 		static let ShowGraph = "Show Graph"
 	}
 	
-	private let defaults = NSUserDefaults.standardUserDefaults()
-	private struct defaultsKeys {
+	fileprivate let defaults = UserDefaults.standard
+	fileprivate struct defaultsKeys {
 		static let graphProgram = "CalculatorViewController.graphProgram"
 		static let brainBrogram = "CalculatorViewController.brainProgram"
 	}
 	
-	private var graphProgram: CalculatorBrain.PropertyList? {
-		get { return defaults.objectForKey(defaultsKeys.graphProgram) as? [AnyObject] }
-		set { defaults.setObject(newValue, forKey: defaultsKeys.graphProgram) }
+	fileprivate var graphProgram: CalculatorBrain.PropertyList? {
+		get { return defaults.object(forKey: defaultsKeys.graphProgram) as? [AnyObject] }
+		set { defaults.set(newValue, forKey: defaultsKeys.graphProgram) }
 	}
-	private var brainProgram: CalculatorBrain.PropertyList? {
-		get { return defaults.objectForKey(defaultsKeys.brainBrogram) as? [AnyObject] }
-		set { defaults.setObject(newValue, forKey: defaultsKeys.brainBrogram) }
+	fileprivate var brainProgram: CalculatorBrain.PropertyList? {
+		get { return defaults.object(forKey: defaultsKeys.brainBrogram) as? [AnyObject] }
+		set { defaults.set(newValue, forKey: defaultsKeys.brainBrogram) }
 	}
 	
-	@IBAction func showGraph(sender: UIButton) {
+	@IBAction func showGraph(_ sender: UIButton) {
 		graphProgram = brain.program
 		if let graphNC = splitViewController?.viewControllers.last as? UINavigationController {
 			if let graphVC = graphNC.topViewController as? GraphViewController {
 				prepareGraphVC(graphVC)
 			} else {
-				performSegueWithIdentifier(StoryBoard.ShowGraph, sender: nil)
+				performSegue(withIdentifier: StoryBoard.ShowGraph, sender: nil)
 			}
 		}
 		
@@ -156,10 +156,10 @@ class CalculatorViewController: UIViewController {
 	}
 	
 	
-	@IBAction private func touchDigit(sender: UIButton) {
+	@IBAction fileprivate func touchDigit(_ sender: UIButton) {
 		let digit = sender.currentTitle!
 		if userIsInTheMiddleOfTyping {
-			if digit != decimalSeparator || display.text!.rangeOfString(decimalSeparator) == nil {
+			if digit != decimalSeparator || display.text!.range(of: decimalSeparator) == nil {
 				display.text = display.text! + digit
 			}
 		} else {
@@ -168,21 +168,21 @@ class CalculatorViewController: UIViewController {
 		userIsInTheMiddleOfTyping = true
 	}
 	
-	@IBAction func plusMinus(sender: UIButton) {
+	@IBAction func plusMinus(_ sender: UIButton) {
 		if userIsInTheMiddleOfTyping {
-			if display.text!.rangeOfString("-") == nil {
+			if display.text!.range(of: "-") == nil {
 				display.text = "-" + display.text!
 			} else {
-				display.text!.removeAtIndex(display.text!.startIndex)
+				display.text!.remove(at: display.text!.startIndex)
 			}
 		} else {
 			performOperation(sender)
 		}
 	}
 	
-	@IBAction func undo(sender: UIButton) {
+	@IBAction func undo(_ sender: UIButton) {
 		if userIsInTheMiddleOfTyping {
-			display.text!.removeAtIndex(display.text!.endIndex.predecessor())
+			display.text!.remove(at: display.text!.characters.index(before: display.text!.endIndex))
 			if display.text!.isEmpty {
 				userIsInTheMiddleOfTyping = false
 				displayValue = brain.result
@@ -213,16 +213,16 @@ class CalculatorViewController: UIViewController {
 		}
 	}
 	
-	@IBAction func pushVariable(sender: UIButton) {
+	@IBAction func pushVariable(_ sender: UIButton) {
 		if let variableName = sender.currentTitle {
 			brain.setOperand(variableName)
 		}
 		displayValue = brain.result
 	}
 	
-	@IBAction func setVariable(sender: UIButton) {
+	@IBAction func setVariable(_ sender: UIButton) {
 		if var variable = sender.currentTitle {
-			variable.removeAtIndex(sender.currentTitle!.startIndex)
+			variable.remove(at: sender.currentTitle!.startIndex)
 			if let value = displayValue {
 				userIsInTheMiddleOfTyping = false
 				brain.setVariable(variable, value: value)
@@ -231,7 +231,7 @@ class CalculatorViewController: UIViewController {
 		}
 	}
 	
-	@IBAction private func performOperation(sender: UIButton) {
+	@IBAction fileprivate func performOperation(_ sender: UIButton) {
 		if let _ = brain.error {
 			brain.clear()
 		}
@@ -270,25 +270,25 @@ class CalculatorViewController: UIViewController {
 		}
 	}
 	
-	override func viewWillAppear(animated: Bool) {
+	override func viewWillAppear(_ animated: Bool) {
 		super.viewWillAppear(animated)
 		self.navigationController?.setNavigationBarHidden(true, animated: false)
 	}
 	
-	override func viewWillDisappear(animated: Bool) {
+	override func viewWillDisappear(_ animated: Bool) {
 		super.viewWillDisappear(animated)
 		self.navigationController?.setNavigationBarHidden(false, animated: false)
 	}
 	
 	
 	
-	override func willTransitionToTraitCollection(newCollection: UITraitCollection, withTransitionCoordinator coordinator: UIViewControllerTransitionCoordinator) {
-		super.willTransitionToTraitCollection(newCollection, withTransitionCoordinator: coordinator)
+	override func willTransition(to newCollection: UITraitCollection, with coordinator: UIViewControllerTransitionCoordinator) {
+		super.willTransition(to: newCollection, with: coordinator)
 		configureView(newCollection.verticalSizeClass, buttonBlank: buttonBlank)
 	}
 	
-	override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
-		if let graphNC = segue.destinationViewController as? UINavigationController, let identifer = segue.identifier, identifer == StoryBoard.ShowGraph {
+	override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+		if let graphNC = segue.destination as? UINavigationController, let identifer = segue.identifier, identifer == StoryBoard.ShowGraph {
 			if let graphVC = graphNC.topViewController as? GraphViewController {
 				
 				graphVC.title = brain.description
@@ -300,14 +300,14 @@ class CalculatorViewController: UIViewController {
 		}
 	}
 	
-	private func prepareGraphVC(graphVC: GraphViewController) {
+	fileprivate func prepareGraphVC(_ graphVC: GraphViewController) {
 		graphVC.title = brain.description
 		graphVC.functionForDraw = { [weak weakSelf = self] in
 			weakSelf?.brain.setVariable("M", value: $0)
 			return weakSelf?.brain.result}
 	}
 	
-	override func shouldPerformSegueWithIdentifier(identifier: String, sender: AnyObject?) -> Bool {
+	override func shouldPerformSegue(withIdentifier identifier: String, sender: Any?) -> Bool {
 		return !brain.isPartialResult
 	}
 	

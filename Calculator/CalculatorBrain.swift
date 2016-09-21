@@ -12,13 +12,13 @@ class CalculatorBrain {
 	
 	// MARK: Properties
 	
-	private var accumulator = 0.0
-	private var descriptionAccumulator = ""
-	private var currentPrecedence = Int.max
+	fileprivate var accumulator = 0.0
+	fileprivate var descriptionAccumulator = ""
+	fileprivate var currentPrecedence = Int.max
 	
-	private var internalProgram = [AnyObject]()
+	fileprivate var internalProgram = [AnyObject]()
 	
-	private let parenthesisOperations = ["+", "−"]
+	fileprivate let parenthesisOperations = ["+", "−"]
 	
 	var description: String {
 		get {
@@ -38,85 +38,85 @@ class CalculatorBrain {
 		}
 	}
 	
-	private var variableValues = [String: Double]() {
+	fileprivate var variableValues = [String: Double]() {
 		didSet {
-			program = internalProgram
+			program = internalProgram as CalculatorBrain.PropertyList
 		}
 	}
 	
 	// MARK: Methods
 	
-	func setOperand(variableName: String) {
+	func setOperand(_ variableName: String) {
 		if pending != nil && !pending!.secodndOperandSetted {
 			pending!.secodndOperandSetted = true
 		}
-		operations[variableName] = Operation.Variable
+		operations[variableName] = Operation.variable
 		performOperation(variableName)
 	}
 	
-	func setVariable(variableName: String, value: Double) {
-		operations[variableName] = Operation.Variable
+	func setVariable(_ variableName: String, value: Double) {
+		operations[variableName] = Operation.variable
 		variableValues[variableName] = value
 	}
 	
-	func setOperand(operand: Double) {
+	func setOperand(_ operand: Double) {
 		if pending != nil && !pending!.secodndOperandSetted {
 			pending!.secodndOperandSetted = true
 		}
 		accumulator = operand
-		internalProgram.append(operand)
+		internalProgram.append(operand as AnyObject)
 		descriptionAccumulator = String(format: "%g", accumulator)
 	}
 	
-	private var operations: Dictionary<String, Operation> = [
-		"x²"	: Operation.UnaryOperation({ $0 * $0 }, { "(\($0))²" }, nil),
-		"x⁻¹"	: Operation.UnaryOperation({ 1 / $0 }, { "(\($0))¹" }, { $0 == 0.0 ? "Деление на ноль" : nil }),
-		"sin⁻¹" : Operation.UnaryOperation({ 1 / sin($0) }, { "sin(\($0))⁻¹" }, { sin($0) == 0.0 ? "Деление на ноль" : nil  }),
-		"cos⁻¹" : Operation.UnaryOperation({ 1 / cos($0) }, { "cos(\($0))⁻¹" }, { cos($0) == 0.0 ? "Деление на ноль" : nil }),
-		"tan"	: Operation.UnaryOperation(tan, { "tan(\($0))" }, nil),
-		"ln"	: Operation.UnaryOperation(log, { "ln(\($0))" }, { $0 < 0.0 ? "ln отриц. числа" : nil }),
-		"sin"	: Operation.UnaryOperation(sin, { "sin(\($0))" }, nil),
-		"cos"	: Operation.UnaryOperation(cos, { "cos(\($0))" }, nil),
-		"√"		: Operation.UnaryOperation(sqrt, { "√(\($0))" }, { $0 < 0.0 ? "Корень отриц. числа" : nil }),
-		"±"		: Operation.UnaryOperation({ -$0 }, { "-(\($0))" }, nil),
-		"×"		: Operation.BinaryOperation({ $0 * $1 }, { "\($0) × \($1)" }, 1, nil),
-		"÷"		: Operation.BinaryOperation({ $0 / $1 }, { "\($0) ÷ \($1)" }, 1, { $1 == 0.0 ? "Деление на ноль" : nil }),
-		"+"		: Operation.BinaryOperation({ $0 + $1 }, { "\($0) + \($1)" }, 0, nil),
-		"−"		: Operation.BinaryOperation({ $0 - $1 }, { "\($0) − \($1)" }, 0, nil),
-		"rand"	: Operation.NullaryOperation(drand48, "rand()"),
-		"π"		: Operation.Constant(M_PI),
-		"e"		: Operation.Constant(M_E),
-		"="		: Operation.Equals
+	fileprivate var operations: Dictionary<String, Operation> = [
+		"x²"	: Operation.unaryOperation({ $0 * $0 }, { "(\($0))²" }, nil),
+		"x⁻¹"	: Operation.unaryOperation({ 1 / $0 }, { "(\($0))¹" }, { $0 == 0.0 ? "Деление на ноль" : nil }),
+		"sin⁻¹" : Operation.unaryOperation({ 1 / sin($0) }, { "sin(\($0))⁻¹" }, { sin($0) == 0.0 ? "Деление на ноль" : nil  }),
+		"cos⁻¹" : Operation.unaryOperation({ 1 / cos($0) }, { "cos(\($0))⁻¹" }, { cos($0) == 0.0 ? "Деление на ноль" : nil }),
+		"tan"	: Operation.unaryOperation(tan, { "tan(\($0))" }, nil),
+		"ln"	: Operation.unaryOperation(log, { "ln(\($0))" }, { $0 < 0.0 ? "ln отриц. числа" : nil }),
+		"sin"	: Operation.unaryOperation(sin, { "sin(\($0))" }, nil),
+		"cos"	: Operation.unaryOperation(cos, { "cos(\($0))" }, nil),
+		"√"		: Operation.unaryOperation(sqrt, { "√(\($0))" }, { $0 < 0.0 ? "Корень отриц. числа" : nil }),
+		"±"		: Operation.unaryOperation({ -$0 }, { "-(\($0))" }, nil),
+		"×"		: Operation.binaryOperation({ $0 * $1 }, { "\($0) × \($1)" }, 1, nil),
+		"÷"		: Operation.binaryOperation({ $0 / $1 }, { "\($0) ÷ \($1)" }, 1, { $1 == 0.0 ? "Деление на ноль" : nil }),
+		"+"		: Operation.binaryOperation({ $0 + $1 }, { "\($0) + \($1)" }, 0, nil),
+		"−"		: Operation.binaryOperation({ $0 - $1 }, { "\($0) − \($1)" }, 0, nil),
+		"rand"	: Operation.nullaryOperation(drand48, "rand()"),
+		"π"		: Operation.constant(M_PI),
+		"e"		: Operation.constant(M_E),
+		"="		: Operation.equals
 	]
 	
-	private enum Operation {
-		case Constant(Double)
-		case UnaryOperation((Double) -> Double, (String) -> String, ((Double) -> String?)?)
-		case BinaryOperation((Double, Double) -> Double, (String, String) -> String, Int, ((Double, Double) -> String?)?)
-		case Equals
-		case NullaryOperation(() -> Double, String)
-		case Variable
+	fileprivate enum Operation {
+		case constant(Double)
+		case unaryOperation((Double) -> Double, (String) -> String, ((Double) -> String?)?)
+		case binaryOperation((Double, Double) -> Double, (String, String) -> String, Int, ((Double, Double) -> String?)?)
+		case equals
+		case nullaryOperation(() -> Double, String)
+		case variable
 	}
 	
-	func performOperation(symbol: String) {
-		internalProgram.append(symbol)
+	func performOperation(_ symbol: String) {
+		internalProgram.append(symbol as AnyObject)
 		if let operation = operations[symbol] {
 			
 			switch operation {
-			case .Variable:
+			case .variable:
 				accumulator = variableValues[symbol] != nil ? variableValues[symbol]! : 0.0
 				descriptionAccumulator = symbol
-			case .NullaryOperation(let function, let descriptionValue):
+			case .nullaryOperation(let function, let descriptionValue):
 				accumulator = function()
 				descriptionAccumulator = descriptionValue
-			case .Constant(let value):
+			case .constant(let value):
 				accumulator = value
 				descriptionAccumulator = symbol
-			case .UnaryOperation(let function, let descriptionFunction, let validatingFunction):
+			case .unaryOperation(let function, let descriptionFunction, let validatingFunction):
 				error = validatingFunction?(accumulator)
 				accumulator = function(accumulator)
 				descriptionAccumulator = descriptionFunction(descriptionAccumulator)
-			case .BinaryOperation(let function, let descriptionFunction, let precedence, let validatingFunction):
+			case .binaryOperation(let function, let descriptionFunction, let precedence, let validatingFunction):
 				if currentPrecedence < precedence {
 					descriptionAccumulator = addParenthesis(descriptionAccumulator)
 				}
@@ -124,17 +124,17 @@ class CalculatorBrain {
 				
 				executePendingBinaryOperation()
 				pending = PerndingBinaryOperationInfo(binaryOperation: function, firstOperand: accumulator, descriptionFunction: descriptionFunction, descriptionOperand: descriptionAccumulator, validatingFunction: validatingFunction, secodndOperandSetted: false)
-			case .Equals:
+			case .equals:
 				executePendingBinaryOperation()
 			}
 		}
 	}
 	
-	private func addParenthesis(string: String) -> String {
+	fileprivate func addParenthesis(_ string: String) -> String {
 		return "(" + string + ")"
 	}
 	
-	private func executePendingBinaryOperation() {
+	fileprivate func executePendingBinaryOperation() {
 		if var pending = pending {
 			pending.secodndOperandSetted = false
 			error = pending.validatingFunction?(pending.firstOperand, accumulator)
@@ -144,9 +144,9 @@ class CalculatorBrain {
 		}
 	}
 	
-	private var pending: PerndingBinaryOperationInfo?
+	fileprivate var pending: PerndingBinaryOperationInfo?
 	
-	private struct PerndingBinaryOperationInfo {
+	fileprivate struct PerndingBinaryOperationInfo {
 		var binaryOperation: (Double, Double) -> Double
 		var firstOperand: Double
 		var descriptionFunction: (String, String) -> String
@@ -159,7 +159,7 @@ class CalculatorBrain {
 	
 	var program: PropertyList {
 		get {
-			return internalProgram
+			return internalProgram as CalculatorBrain.PropertyList
 		}
 		set {
 			clear()
@@ -168,7 +168,7 @@ class CalculatorBrain {
 					if let operand = op as? Double {
 						setOperand(operand)
 					} else if let operation = op as? String {
-						if operations[operation] == nil { operations[operation] = Operation.Variable }
+						if operations[operation] == nil { operations[operation] = Operation.variable }
 						performOperation(operation)
 					}
 				}
@@ -192,7 +192,7 @@ class CalculatorBrain {
 	func undoLast() {
 		if internalProgram.isEmpty { clear(); return }
 		internalProgram.removeLast()
-		program = internalProgram
+		program = internalProgram as CalculatorBrain.PropertyList
 	}
 	
 	var result: Double {
@@ -205,17 +205,17 @@ class CalculatorBrain {
 
 // MARK: Formatter
 
-let formatter: NSNumberFormatter = {
-	let formatter = NSNumberFormatter()
-	formatter.locale = NSLocale.currentLocale()
+let formatter: NumberFormatter = {
+	let formatter = NumberFormatter()
+	formatter.locale = Locale.current
 	formatter.maximumFractionDigits = 6
 	formatter.notANumberSymbol = "Error"
 	formatter.groupingSeparator = " "
-	formatter.numberStyle = .DecimalStyle
+	formatter.numberStyle = .decimal
 	return formatter
 }()
 
-class CalculatorFormatter: NSNumberFormatter {
+class CalculatorFormatter: NumberFormatter {
 	
 	required init?(coder aDecoder: NSCoder) {
 		super.init(coder: aDecoder)
@@ -223,11 +223,11 @@ class CalculatorFormatter: NSNumberFormatter {
 	
 	override init() {
 		super.init()
-		self.locale = NSLocale.currentLocale()
+		self.locale = Locale.current
 		self.maximumFractionDigits = 6
 		self.notANumberSymbol = "Error"
 		self.groupingSeparator = " "
-		self.numberStyle = .DecimalStyle
+		self.numberStyle = .decimal
 	}
 	
 	static let sharedInstance = CalculatorFormatter()

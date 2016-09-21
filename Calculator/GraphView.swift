@@ -13,13 +13,13 @@ class GraphView: UIView {
 	
 	// MARK: Variables
 	
-	var functionForDraw: ((x: Double) -> Double?)? { didSet { setNeedsDisplay() } }
+	var functionForDraw: ((_ x: Double) -> Double?)? { didSet { setNeedsDisplay() } }
 	var lineWidth: CGFloat = 1
-	private var drawOnlyAxes = false
+	fileprivate var drawOnlyAxes = false
 	
-	private let axesDrawer = AxesDrawer(color: UIColor.blackColor())
+	fileprivate let axesDrawer = AxesDrawer(color: UIColor.black)
 	
-	private var origin: CGPoint! {
+	fileprivate var origin: CGPoint! {
 		get {
 			var origin = graphCentre
 			origin.x += originOffset.x
@@ -36,14 +36,14 @@ class GraphView: UIView {
 			}
 		}
 	}
-	var originOffset = CGPointZero { didSet { setNeedsDisplay() } }
-	private var graphCentre: CGPoint { return convertPoint(center, fromView: superview) }
+	var originOffset = CGPoint.zero { didSet { setNeedsDisplay() } }
+	fileprivate var graphCentre: CGPoint { return convert(center, from: superview) }
 	
 	@IBInspectable var scale: CGFloat = 1.0 { didSet {	setNeedsDisplay() }	}
 	
 	// MARK: Draw
 	
-	override func drawRect(rect: CGRect) {
+	override func draw(_ rect: CGRect) {
 		
 		if origin == nil {
 			origin = CGPoint(x: bounds.midX, y: bounds.midY)
@@ -61,9 +61,9 @@ class GraphView: UIView {
 		
 	}
 	
-	func drawFunctionInRect(bounds: CGRect, origin: CGPoint, scale: CGFloat)
+	func drawFunctionInRect(_ bounds: CGRect, origin: CGPoint, scale: CGFloat)
 	{
-		UIColor.blueColor().set()
+		UIColor.blue.set()
 		
 		if functionForDraw == nil {
 			return
@@ -94,20 +94,20 @@ class GraphView: UIView {
 			
 			xGraph = CGFloat(i) / contentScaleFactor
 			
-			guard let y = functionForDraw?(x: x) where y.isFinite else { lastPoint.isNormal = false; continue  }
+			guard let y = functionForDraw?(x) , y.isFinite else { lastPoint.isNormal = false; continue  }
 			
 			yGraph = origin.y - CGFloat(y) * scale
 			
 			let newPoint = CGPoint(x: xGraph, y: yGraph)
 			
 			if !lastPoint.isNormal {
-				path.moveToPoint(newPoint)
+				path.move(to: newPoint)
 			} else {
 				guard !isJumpOfFunction else {
 					lastPoint = GraphPoint(yGraph: yGraph, isNormal: false)
 					continue
 				}
-				path.addLineToPoint(newPoint)
+				path.addLine(to: newPoint)
 			}
 			
 			lastPoint = GraphPoint(yGraph: yGraph, isNormal: true)
@@ -128,7 +128,7 @@ class GraphView: UIView {
 	}
 	
 	// MARK: Guestures
-	private func addGuestures() {
+	fileprivate func addGuestures() {
 		self.addGestureRecognizer(UIPinchGestureRecognizer(target: self, action: #selector(GraphView.changeScale(_:))))
 		
 		let tapForSetOriginRecognizer = UITapGestureRecognizer(target: self, action: #selector(GraphView.tapForSetOrigin(_:)))
@@ -138,22 +138,22 @@ class GraphView: UIView {
 		self.addGestureRecognizer(UIPanGestureRecognizer(target: self, action: #selector(GraphView.panForSetOrigin(_:))))
 	}
 	
-	private var snapshot: UIView!
+	fileprivate var snapshot: UIView!
 	
-	func changeScale(recognizer: UIPinchGestureRecognizer) {
+	func changeScale(_ recognizer: UIPinchGestureRecognizer) {
 		switch recognizer.state {
-		case .Began:
-			snapshot = self.snapshotViewAfterScreenUpdates(false)
+		case .began:
+			snapshot = self.snapshotView(afterScreenUpdates: false)
 			snapshot.alpha = 0.8
 			self.addSubview(snapshot)
-		case .Changed:
-			let touch = recognizer.locationInView(self)
+		case .changed:
+			let touch = recognizer.location(in: self)
 			snapshot.frame.size.height *= recognizer.scale
 			snapshot.frame.size.width *= recognizer.scale
 			snapshot.frame.origin.x = snapshot.frame.origin.x * recognizer.scale + (1 - recognizer.scale) * touch.x
 			snapshot.frame.origin.y = snapshot.frame.origin.y * recognizer.scale + (1 - recognizer.scale) * touch.y
 			recognizer.scale = 1.0
-		case .Ended:
+		case .ended:
 			let changedScale = snapshot.frame.height / self.bounds.height
 			scale *= changedScale
 			origin.x = origin.x * changedScale + snapshot.frame.origin.x
@@ -165,25 +165,25 @@ class GraphView: UIView {
 		}
 	}
 	
-	func tapForSetOrigin(recognizer: UITapGestureRecognizer) {
-		if recognizer.state == .Ended {
-			origin = recognizer.locationInView(self)
+	func tapForSetOrigin(_ recognizer: UITapGestureRecognizer) {
+		if recognizer.state == .ended {
+			origin = recognizer.location(in: self)
 		}
 	}
 	
-	func panForSetOrigin(recognizer: UIPanGestureRecognizer) {
+	func panForSetOrigin(_ recognizer: UIPanGestureRecognizer) {
 		switch recognizer.state {
-		case .Began:
+		case .began:
 			drawOnlyAxes = true
-			snapshot = self.snapshotViewAfterScreenUpdates(false)
+			snapshot = self.snapshotView(afterScreenUpdates: false)
 			snapshot!.alpha = 0.4
 			self.addSubview(snapshot!)
-		case .Changed:
-			let translation = recognizer.translationInView(self)
+		case .changed:
+			let translation = recognizer.translation(in: self)
 			snapshot!.center.x += translation.x
 			snapshot!.center.y += translation.y
-			recognizer.setTranslation(CGPoint(x: 0.0, y: 0.0), inView: self)
-		case .Ended:
+			recognizer.setTranslation(CGPoint(x: 0.0, y: 0.0), in: self)
+		case .ended:
 			origin.x += snapshot!.frame.origin.x
 			origin.y += snapshot!.frame.origin.y
 			drawOnlyAxes = false
@@ -196,7 +196,7 @@ class GraphView: UIView {
 	
 	// MARK: Other
 	
-	override func traitCollectionDidChange(previousTraitCollection: UITraitCollection?) {
+	override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
 		super.traitCollectionDidChange(previousTraitCollection)
 		origin = nil
 	}
