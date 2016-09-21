@@ -79,7 +79,7 @@ class CalculatorViewController: UIViewController {
 	
 	private var displayValue: Double? {
 		get {
-			if let text = display.text, number = formatter.numberFromString(text) {
+			if let text = display.text, let number = formatter.numberFromString(text) {
 				return number.doubleValue
 			}
 			return nil
@@ -288,7 +288,7 @@ class CalculatorViewController: UIViewController {
 	}
 	
 	override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
-		if let graphNC = segue.destinationViewController as? UINavigationController, identifer = segue.identifier where identifer == StoryBoard.ShowGraph {
+		if let graphNC = segue.destinationViewController as? UINavigationController, let identifer = segue.identifier, identifer == StoryBoard.ShowGraph {
 			if let graphVC = graphNC.topViewController as? GraphViewController {
 				
 				graphVC.title = brain.description
