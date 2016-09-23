@@ -84,7 +84,7 @@ class AxesDrawer
             
             // now create a bounding box inside whose edges those four hashmarks lie
             let bboxSize = pointsPerHashmark * startingHashmarkRadius * 2
-            let bbox = CGRect(center: origin, size: CGSize(width: bboxSize, height: bboxSize))
+            var bbox = CGRect(center: origin, size: CGSize(width: bboxSize, height: bboxSize))
 
             // formatter for the hashmark labels
             let formatter = NumberFormatter()
@@ -108,7 +108,7 @@ class AxesDrawer
                 if let bottomHashmarkPoint = alignedPoint(origin.x, y: bbox.maxY, insideBounds:bounds) {
                     drawHashmarkAtLocation(bottomHashmarkPoint, .left("-\(label)"))
                 }
-				bbox.insetBy(dx: -pointsPerHashmark, dy: -pointsPerHashmark)
+				bbox = bbox.insetBy(dx: -pointsPerHashmark, dy: -pointsPerHashmark)
             }
         }
     }
