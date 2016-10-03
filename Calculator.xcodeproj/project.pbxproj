@@ -17,6 +17,7 @@
 		4FADF3B71D61ED3F00C9550A /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 4FADF3B61D61ED3F00C9550A /* Assets.xcassets */; };
 		4FADF3BA1D61ED3F00C9550A /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 4FADF3B81D61ED3F00C9550A /* LaunchScreen.storyboard */; };
 		4FADF3C31D62FADF00C9550A /* CalculatorBrain.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4FADF3C21D62FADF00C9550A /* CalculatorBrain.swift */; };
+		4FFB40E91DA22729003467AC /* README.md in Sources */ = {isa = PBXBuildFile; fileRef = 4FFB40E81DA22729003467AC /* README.md */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -32,6 +33,7 @@
 		4FADF3B91D61ED3F00C9550A /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		4FADF3BB1D61ED3F00C9550A /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		4FADF3C21D62FADF00C9550A /* CalculatorBrain.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CalculatorBrain.swift; sourceTree = "<group>"; };
+		4FFB40E81DA22729003467AC /* README.md */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = SOURCE_ROOT; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -77,6 +79,7 @@
 		4FADF3C11D61EEF000C9550A /* Support Files */ = {
 			isa = PBXGroup;
 			children = (
+				4FFB40E81DA22729003467AC /* README.md */,
 				4F3211F41D6F227500D4E7A5 /* AxesDrawer.swift */,
 				4F3211F61D6F2CFE00D4E7A5 /* SplitViewController.swift */,
 				4FADF3AF1D61ED3F00C9550A /* AppDelegate.swift */,
@@ -166,6 +169,7 @@
 				4FADF3C31D62FADF00C9550A /* CalculatorBrain.swift in Sources */,
 				4F3211F51D6F227500D4E7A5 /* AxesDrawer.swift in Sources */,
 				4FADF3B21D61ED3F00C9550A /* CalculatorViewController.swift in Sources */,
+				4FFB40E91DA22729003467AC /* README.md in Sources */,
 				4FADF3B01D61ED3F00C9550A /* AppDelegate.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
